@@ -1,0 +1,96 @@
+
+
+chmod 660 /etc/passwd donne la permission 
+-rw-r-----
+user1 a les permission:si uid=0 ie admin il peut lire & ecrire
+sinon s il appartient a g1 il a le r: peut lire
+sinon il n a rien!
+
+
+GESTION DE FICHIERS
+
+
+ls -l /rep 		
+drwxrwxrwx 20 user01 g1 __________.
+-rw------- 2 user02 g1 _______f
+
+seul le user02 peut supprimer /rep 
+tt le monde peut supprimer f
+supprimer un fichier f c est modifier le repertoire!
+2: si on supprime f on peut tjrs acceder a ses donner pck il a un lien.
+
+
+pour aficher un repertoire "ls /rep" les permissions minimales sont:
+		REP			FILE
+r 	pour un rep cé un ls	| fichier c un vi ou cat
+w 	supprimer/creer rm      | rm ou touch
+x  	acceder
+
+ls /rep
+   x x,r
+
+rm /rep/rep2/f
+   x x   x,w
+
+cp /rep/f	/rep2     ( une copie c une creation)
+   x x  r       x  x,w	
+
+mv /rep01/f	/rep2      (c pas une creation, on a deplacé)
+   x x,w        x   x,w
+
+user par defaut:user qui a cree le fichier
+le groupe par defaut: groupe principal,
+permissions par defaut: sont calculées a partir du masque  666-022 =644
+fichier 666-mask     (umask: pour afficher le masque)
+rep 777-mask
+
+
+Pour changer le mask à 0026: umask 0026 --> les fichiers crees auront les permissions 640:  -rw-r------
+
+
+si le sticky bit est positionné sur un rep un user ne peut supprimer ke ses fichier, sinn il peut tt supprimer
+
+chmod o+t rep ( ajouter le sticky bit) 
+chmod o-t rep ( enlever le sticky bit)
+
+ls -ld /tmp 
+autoriser l'user à modifier un rep sans supprimer les fichiers des autres
+
+t: càd il ya le x
+T: il ya pas le x
+
+/etc/passwd uniquementle root peut le modifier
+est executer avec les privilege de propietaire
+
+-rwsr-xr-x 1 0 root 37132 2011-02-21 00:16 /usr/bin/passwd
+appartient au root
+lorsqu'on execute passwd: on teste si user1 a le droit de faire cette commande
+
+which commande: affiche le chemin de la commande
+ls -l 'which commande'  les drois d acces pr cette commande
+
+
+chmod u+s file ( pr avoir les droits d acces du propritaire)
+chmod u-s file
+
+chmod 4755 f
+rwsr-xr--x
+
+chercher tous les fichiers ayant la permission suid s 
+
+mkdir ~/test
+cd ~/test
+> f{1,2,3,4}
+chmod 622 f1
+chmod 642 f2
+chmod 624 f3
+chmod 022 f4
+
+
+find ~/test -perm +022 le + cé un ou on demande au moin un 2 pour le grp ou 2 pour les autres
+find ~/test -perm -022  le - est un ET : un w pour le grp et un w pour les autres
+find ~/test -perm 022
+
+chercher le suid positionné et le x pour les autres:
+find / -perm -4001 -user01 root
+

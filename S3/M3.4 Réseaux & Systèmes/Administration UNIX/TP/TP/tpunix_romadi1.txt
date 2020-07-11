@@ -1,0 +1,205 @@
+Les attributs des fichiers (ext2t)
+chattr +- attribut file (ajouter/retirer attribut)
+eg: chattr +a  /etc/passwd
+lsattr file //afficher les attributs
+
+exemples d'attribut:
+a : append (ajout de donnée à la fin du fichier)
+echo...>>file
+i : immutable :aucun changement n'est autorisé
+s: lors supression ses données sont à 0
+S: sychrone :les modification se font directement ds le disque et non ds la mémoire
+
+/dev/hda: disque dur maitre du 1èr controleur ide
+/dev/hdb : disque dur esclave du 1èr controleur ide
+/dev/hdc: disque dur maitre du 2ème controleur ide
+/dev/hdd : disque dur esclave du 2ème controleur ide
+
+Dans un disque /dev/hdx
+/dev/hdx1: 1ère partition primaire
+/dev/hdx2: 1ère partition primaire
+/dev/hdx3: 1ère partition primaire
+/dev/hdx4: 1ère partition primaire
+/dev/hdx6: 1ère partition logique
+..........
+/dev/hdx64: 1ère partition logique
+
+prkoi on ne peut avoir que 4 partition primaire :?
+mbr=512 octer
+*la deuxième partie du mbr est la table de partition de 64 octet
+pour chaque partition neccesite 4 octets d'info
+(debut,fin,sysfichier)
+*première partie: programme amorcage :446 octet
+*troizieme partie: type du disque
+
+
+parition etendu divisé en partition logique:
+les info sur les partiotn logiques se trouve s une deuxieme table de partion qui se trouve ds le secteur de boott ds...
+une seule partiotn etendu par disque
+eg:
+/dev/hdx : 2parti primai (hdx1/2 et 2 parti logique (hdx5/6)
+
+pour utiliser une partition il faut un sys de fichier
+sys de fichier ext2:
+fdisk -l disque
+eg fdisk -l /dev/hdx
+
+dmseg |grep "[hs]d." 
+
+
+fdisk /dev/sda
+
+mkfs -t ext2 partitions
+
+ds ext2 ya 4 types de blocs:
+-superbloc : contient les infos sur le sys de fichier ( taille d'un bloc, nombre de bloc de donne , lliste des bloc libres, nvbr des nodes, liste des nodes libres,nbr de montage effectué, nbr de montage max ss verification,) 
+pour afficher ces infos: tune2fs -l partition
+
+-bloc de données:bloc utilisé pour enregistré les donnnes des fichiers
+_ inode: contient des infos sur un fichier
+un inode est divisé en 2 parties:
+*des infos affiché par ls -l (prop, permission, date dernier acces, adate de creation/modif,atime et ctime)
+2ème partie:
+*la liste des bloc contenant les données du fichier
+les 12 premiers pointeurs, sont les adresses des blocs de données
+Puis un pointeur vers un (bloc d'indirection simple) BIS: des adrersses de blocs de données
+(256 BDD)
+Puis un pt vers un bloc d'indirection double:256 BIS 
+pour chaque BIS ona 256 BDD (de 2ko)
+
+Puis BIT :
+
+Taille max si taille d'un bloc est 1k
+(12+256+256²+256³)
+
+BDD d'un repertoire: correspondance
+find /-inode 100 : les fichiers qui ont l'inode 100
+
+taille par defaut d'un lboc est 1024 octet : changé par -b taille d'un bloc
+-i nombre block par inode ( ie -i 1024 pour chaque 1024 bloc on cree une inode)
+
+------------------------
+On va creer un sys de fichier sur un fichier
+
+/dev/loopn[0-7] :des partition virtuelle nont pas d'espace physique
+pour les utiliser faut leurs attribuer un espace
+dd if=/dev/zero of=p1 bs=1M count=100 : creer un fichier p1 de tailel 100 Mo
+dd permet de faire des copie physique, bloc par bloc: 
+input /dev/zero : pheriphérique  sys de taille infinie
+output:p1
+bs: taille d'un peration de lecture/ecriture
+count:nbr de lecteure/ecriture
+
+mtn il faut associer p1 à une partion virtuelle par la commande:
+losetup : lier p1 à la partion /dev/loop0
+losetup /dev/loop0 p1
+
+mkfs -t ext2 /dev/loop0
+--------------
+pour utiliser une partiton, il faut la monter sur un rep de l'arboressence;
+le montage conssite à associer la racine du sys du ficher avec le repertoire du montage
+
+mkdir /test
+mount /dev/loop0 /test
+> /test/f1 : f1 utilise les bloc de donneés /dev/loop0
+
+unmount /test
+/dev/loop0
+/dev/loop0 /test
+ls /test : montre qu'ile vide
+
+mdir /test2
+ls /test2 : montre f1
+
+--------------
+mount : affiche...
+options de montage 
+-o
+ro:  monter en lecture seule
+remount:  changer des options d'un sys de fichier de fichiet deja monte
+un sys de fichier monte en lecture seule , on peut pas modifier/supp/cree des fichier
+nosuid: annuler la permission suid
+noexec: annule la permission execution
+no sgid:
+
+cd /test2
+unmount /dev/loop0 : impossible car oné sur /test2
+pour demonter un sys de fich il ne doit pas etre utilisé
+
+qui utilise test2 ?: fuser /test2
+le numero = pid du processus qui utilise le sys de fichier
+
+pour tuer tt les processus qui utilise ce sys de fichier:
+fuser -k /test2 (KILL)
+-------------
+df : information sur les blocs
+df -i : infos en terme d'inodes
+df -ptdemontage : pour un sys spécifique
+
+du ~ : taille de chaque element
+du -s ~  : la somme des tailles
+remarque :/proc est un sys de fichier virtuel  (infos temp reel)
+cat /etc/mtab : sys de fichier montés
+cat /proc/mounts : 
+
+------------
+la racine est monté automaique
+demander au sys da faire un montage automatique,
+/etc/fstab:
+ajouter des ligne de laforme :
+partition ptdemontage typeSF optons 0(dump:sauvegarde) 0(fck:check de sysdeficheir)
+options: auto/rw/ro/noexec/nosuid/nodev/USER/USERS
+
+le mbr est ecrasé on peut plus accéder 
+avec dd if =/dev/hdx of =~/disq/save bs=512 count=1
+option skip=n pour ne pase faire des lectures, on asaute n*ibs et commence la lecture
+seek=n on ecrit pas au debut du fichier, sauter n*obs, et commence l'ecriture
+
+dd if=/dev/hdx2 of=~/disq.save bs=512 seek=1 count =1
+ds le fichier output on va sauter 512 octer et commence l'ecriture
+
+on peut spécifier des taille spécifique pour l'ecriture et la lecture
+---------
+si on perd la table de partion:
+changer seek par skip
+
+-----------------
+Les acls (access listes):
+les permission d'unix,qu'au prop,groupe/ other
+avec acl, des permision à chaque user;
+
+
+il faut monter le sys de ficher avec l'option acl
+mount -o acl,remount /
+pour ajouter des acl: setfacl -m u:nom_user:permissions file
+eg : setfacl -m u:users01 :rw /etc/apsswd
+ls -l /etc/passwd (montre un +, ie ya des acl definis pour ce fichier)
+
+getfacl /etc/passwd
+
+mount -a : monter des sys de fichier avec l'option auto;
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

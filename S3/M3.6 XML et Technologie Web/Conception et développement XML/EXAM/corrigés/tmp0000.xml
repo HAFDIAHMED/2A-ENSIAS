@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- edited with XMLSpy v2007 (http://www.altova.com) by noure (EMBRACE) -->
+<?xml-stylesheet type="text/xsl" href="Untitled4.xsl"?>
+<!DOCTYPE livre SYSTEM "C:\Documents and Settings\noure\Bureau\cours periode2\xml1\exams corriges\2006.dtd">
+<livre>
+	<titre>Data on the Web</titre>
+	<auteur>Serge Abiteboul</auteur>
+	<auteur>Peter Buneman</auteur>
+	<AUTEUR>Dan Suciu</AUTEUR>
+	<section ID="intro" difficulty="easy">
+		<titre>Introduction</titre>
+		<p>Text ... </p>
+		<section>
+			<titre>Audience</titre>
+			<p>Text ... </p>
+		</section>
+		<section>
+			<titre>Web Data and the Two Cultures</titre>
+			<p>Text ... </p>
+			<figure height="400" width="400">
+				<titre>Traditional client/server architecture</titre>
+				<image source="csarch.gif"/>
+			</figure>
+			<p>Text ... </p>
+		</section>
+	</section>
+	<section ID="syntax" difficulty="medium">
+		<titre>A Syntax For Data</titre>
+		<p>Text ... </p>
+		<figure height="200" width="500">
+			<titre>Graph representations of structures</titre>
+			<image source="graphs.gif"/>
+		</figure>
+		<p>Text ... </p>
+		<section>
+			<titre>Base Types</titre>
+			<p>Text ... </p>
+		</section>
+		<section>
+			<titre>Representing Relational Databases</titre>
+			<p>Text ... </p>
+			<figure height="250" width="400">
+				<titre>Examples of Relations</titre>
+				<image source="relations.gif"/>
+			</figure>
+		</section>
+		<section>
+			<titre>Representing Object Databases</titre>
+			<p>Text  </p>
+		</section>
+	</section>
+</livre>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="2009_exo1.xsl"?>
+<facture xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="F:\DOCUME~1\Administrateur\Bureau\EXAMSC~1\2009_exo1.xsd">
+	<personne>Mohamed Ali</personne>
+	<montant>1010.24</montant>
+	<raison>Achat d'ordinateur</raison>
+</facture>
