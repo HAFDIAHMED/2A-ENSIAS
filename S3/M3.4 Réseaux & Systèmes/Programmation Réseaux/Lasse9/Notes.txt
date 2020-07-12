@@ -1,0 +1,77 @@
+* Les ports: 
+	> connues: 0 et 1023
+	> Enregistrés: 1024 et 49151
+	> Dynamiques ou Privés: entre 49152 et 65535.
+	> De toute sorte : entre 0 et 65535.
+
+* Ports par défaut : https://fr.wikipedia.org/wiki/Liste_de_ports_logiciels
+	[ Worldwide Web HTTP(TCP): 80
+	Webcache HTTP alternatif(TCP) : 8080
+	FTP : 21/22
+	TFTP : 69	 
+	DNS : 53 ]
+	IMAP : 143
+	POP : 110
+	SNMP : 161
+	SMTP : 25
+	
+Les ports entre [] sont ceux mentionnés durant l'expliquation cette année, les autres sont mentionnés dans des exams.
+
+* /etc/hosts: Son rôle est d'associer des noms d'hôtes à des adresses IP.
+
+* /etc/protocols : Son rôle est de donner la relation des numéros ID de protocole avec leurs noms.
+
+* HTTP /1.0 200 OK\r\nContent-type : text/html\r\n\r\n : retrouvé la page HTML du serveur.
+
+* La fonction select permet de surveiller au même temps plusieurs sockets et d’être averti de chaque changement réalisé.
+
+* select vs fork() (Avantages de select):
+	> Dans des applications, nous avons besoin des clients et leur DS lors du traitement, select permet de sauvegarder la description de chaque client de chaque 
+	client qui vient de se connecter (fork ne les sauvegarde pas)
+
+* Telnet est du type Client/Serveur mode connecté, il utilise TCP. (TCP doit utilisé pour toute vérification)
+
+* SPLN ou SPIN : Protocole de gestion de réseau à la couche application (Pas sûr??)  
+
+* X25 Plus fiable que IP(mode non connecté)
+
+* Comment peut on identifier une application qui utilise le réseau ?
+	> ça dépends du réseau, si IPv4: par IP/Port 
+	sinon ?(Le prof n'a rien dit oula nssit/maktebtch chnou gal)
+
+* Identifiants:
+	> UDP : 17
+	> TCP : 6
+	> Le systeme détermine : 0 (par la nature du protocol, par ex, s'il détécte SOCK_STREAM il affecte la valeur 6, etc ...)
+
+* gethostbyname : Permet d’identifier un hôte à travers son nom en utilisant un DNS
+
+* > SOCK_STREAM (TCP): transfert de données avec intégrité, fiablité et séquencée.
+  > SOCK_DGRAM (UDP): Sans cnx, non-garantie, datagrammes de petite taille.
+  > SOCK_RAW (ICMP): dialogue direct avec la couche IP.
+
+  N.B : Intégrité : ne pas modifier les données, on contrôle l'intégrité avec le hashage(sha1, md5, ...)
+
+* > HTTP est un protocole sans état (Stateless) : ferme la connexion automatiquement après chaque ligne de commande.
+  > FTP est un protocole avec état : peut effectuer plusieurs commandes dans la même connexion (travaille avec la session, qui se souvient de l'ID dans l'URL)
+
+* netstat : donner les informations sur un réseau.
+
+* > La première valeur par défaut d'un discripteur socket est : int ds1 = 3 (succès)
+							    : - 1 (Erreur)
+
+  > La deuxième valeur est : int ds2 = 4 (ds++;)
+
+  > Expliquation : 0 : entrée standard : clavier
+		   1 : Sortie standard : écran
+		   2 : Les erreurs.
+		   3 : La premiere valeut par défaut du socket.
+
+* select(a,b,c,d,e) 
+	> a = maxDS +1 (socket)
+	> b = &mySet (f_set)
+	> c = généralement NULL(écriture)
+	> d = généralement NULL(Timeout)
+	> e= génétalemet NULL (Exception)
+
+* à part fork et select, y'a la méthode des Threads (just mentionné)
