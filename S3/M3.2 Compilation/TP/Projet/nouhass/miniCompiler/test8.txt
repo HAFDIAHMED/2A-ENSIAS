@@ -1,0 +1,14 @@
+program test;
+const tata=12;
+var x;
+begin
+   x:=0;
+   while x<=tata do 
+	begin 
+	  write(x);
+	  x:=x+3;
+        end;
+   write(x);
+end.
+
+

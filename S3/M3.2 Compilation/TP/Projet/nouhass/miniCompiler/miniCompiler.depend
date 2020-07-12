@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1543466493 source:c:\users\hasnae\minicompiler\main.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<string.h>
+	<ctype.h>
+	"code_lex.h"
+	"erreurs.h"
+
+1541626110 source:c:\users\hasnae\minicompiler\file.c
+	<stdio.h>
+	"file.h"
+
+1541616685 c:\users\hasnae\minicompiler\file.h
+
+1543452994 source:c:\users\hasnae\minicompiler\erreurs.c
+	"erreurs.h"
+
+1543452998 c:\users\hasnae\minicompiler\erreurs.h
+	<stdio.h>
+	<stdlib.h>
+
+1543451903 c:\users\hasnae\minicompiler\code_lex.h
+
+1543453414 source:c:\users\hasnae\minicompiler\analyseur_lexical.c
+
