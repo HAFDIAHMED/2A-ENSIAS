@@ -1,0 +1,213 @@
+
+/*
+--------------------------------------------------------------------------------------
+author: N'Famoussa Kounon NANAMOU
+projet: e-lasse9 de Programmation Réseaux <3
+version: 1.0
+
+contacts: mail (nanamou224@gmail.com) ; facebook/linkedIn: N'Famoussa Kounon NANAMOU
+ +Message: Iras-tu au bout pour trouver le flag????
+---------------------------------------------------------------------------------------
+*/
+
+
++---------------------------+
+| Côté shouya théorique :p  |
++---------------------------+
+
+Introduction 
+	Pour faire communiquer deux programmes en C, on a l'habitude de passer soit par les fichiers soit par les bases de données laissant de côté les sockets. Pourtant les sockets ont l'avantage d'envoyer directement l'information au processus voulu identifié par son numéro de port.
+	
+	Un numéro de port est un entier compris entre 0 et 2^16-1 dont les 1024 premiers sont reservés pour les applications systèmes et les plus courants sont:
+
+	port 		services
+
+	20/21 		FTP
+	22 			SSH
+	23 			Telnet
+	25			SMTP
+	53 			DNS
+	80			HTTP
+	110 		POP3
+	546 		DHCP
+
+Définition
+	Les scokets sont des moyens de communication entre deux programmes locaux ou distant de manière sécurisée.
+	Les sockets sont aussi vu comme une API qui offre des services selon qu'on est client ou serveur
+
+
+Chapitre 1: Les sockest en mode connecté: TCP/IP
+1. Les sockets côté serveur
+Définition: 
+	Une socket est un programme qui écoute une nouvelle et répondre aux requêtes des clients connectés
+
+Les étapes d'implémentation des sockets côté serveur
+	1E: initialiser l'adresse du serveur: aSrv
+	2E: créer une socket serveur: dss -----------> socket()
+	3E: associer l'adresse du serveur aSrv à la socket dss précédemment créée -----------> bind()
+	4E: écouter une nouvelle connexion -----------> listen()
+	5E: accepter une nouvelle connexion -----------> accept()
+	6E: recevoir l'information du client -----------> recv()
+	7E: répondre aux requêtes du client -----------> send()
+	8E: fermer la connexion au client -----------> close()
+
+Le squelette d'un programme serveur, sans la chair hhhh, ressemble à :
+		aSrv
+		dss=socket()
+		bid()
+		listen()
+		while(1)
+		{
+			dsc= accept()
+			reqt= recv()
+			send()
+
+			close(dsc)
+		}
+
+
+2. Les sockets côté client
+Définition
+	Une socket est un programme qui demande des service à un serveur via une requête.
+
+Les étapes d'implémentation des sockets client
+	1E: initialiser l'adresse du serveur
+	2E: créer une socket serveur 
+	3E: demander une connexion au serveur
+	4E: envoyer une requête au serveur
+	5E: recevoir la réponde du serveur
+
+Le squelette d'un programme client, sans la chair hhhh, ressemble à :
+		aSrv
+		dss=socket()
+		connect()
+		send()
+		reps=recv()
+
+
+3. Les sockets multiclients
+Définition
+	Une socket est un programme qui répond aux requêtes de plusieurs client à la fois
+
+Les étapes d'implémentation
+	Remarque: 
+	1M: l'utilisation de fork()
+	2M: l'utilisation de select()
+	3M: l'utilisation des threads()
+
+
+
++---------------------------+
+| Côté shouya technique :p  |
++---------------------------+
+
++ Petite théorie hhhhhhhhhhhh
+
+	1E: Initialiser l'adresse du serveur:: aSrv
+	Il existe plusieurs types de réseaux: IPv4, IPv6, X25, AppTalk,...
+	Chacun de ces réseaux a sa propre manière de faire l'adressage de ses adresses. Dans le cadre de ce cours, nous nous limiterons au réseau IPv4 codé sur 4o alors que son concurrent IPv6 est codé sur 16o.
+
+	Au vu de ces multitudes de réseaux qui existent, on a pensé à définir uns structure commune indépendemment du type de réseau utilisé et pour profiter de l'héritage avec les autres.
+
+	--La structure sockaddr
+		c'est une structure générique indépendante du type de réseau utilisé: IPv4, IPv6, X25, AppleTalk,...
+
+	--La structure sockaddr_in 
+		c'est une structure héritée du type générique sockaddr et donc adaptés au réseau IPv4
+
+
+
++ Implémentation du serveur simple
+	//1E:initialiser l'adresse du serveur: aSrv
+	struct sockaddr_in aSrv;
+	aSrv.sin_family=AF_INET;
+	inet_aton("127.0.0.1", &(aSrv.sin_addr));
+	aSrv.sin_port=htons(80);
+	memset(&(aSrv.sin_zero), "0", 8);
+	---#
+
+	//2E: créer la socket du serveur: dss
+	int dss;
+	dss=socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	---#
+
+	//3E: associer l'adresse du serveur à la socket précedemment créée
+	bind(dss, (struct sockaddr *)&aSrv, sizeof(struct sockaddr*))
+	---#
+
+	//4E: écouter une nouvelle connexion
+	listen(dss, 10);
+	---#
+
+	//5E: accepter une nouvelle connexion
+	int dsc;
+	socklen_t aCltlen=sizeof(struct sockaddr );
+	dsc=accept(dss, (struct sockaddr *)&aClt, &aCltlen);
+	---#
+
+	//6E: recevoir une requête du client
+	char* reqt=calloc(1024, sizeof(char));
+	memset(&reqt, "\0", 1024);
+	if(recv(dsc, reqt, sizeof(reqt), 0)>0)
+	---#
+
+	//7E: envoyer la réponse au client
+	char* reps=calloc(1024, sizeof(char));
+	send(dsc, reps, sizeof(reps));
+	---#
+
+	//8E: fermer la connexion au client
+	close(dsc);
+	---#
+
+
++ Implémentation du client
+
+	//1E:initialiser l'adresse du serveur: aSrv
+	struct sockaddr_in aSrv;
+	aSrv.sin_family=AF_INET;
+	inet_aton("127.0.0.1", &(aSrv.sin_addr));
+	aSrv.sin_port=htons(80);
+	memset(&(aSrv.sin_zero), "0", 8);
+	---#
+
+	//2E: créer la socket du serveur: dss
+	int dss;
+	dss=socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	---#
+
+	//3E: se connecter au serveur
+	connect(dss, (struct sockaddr *) &aSrv, sizeof(struct sockaddr))
+	---#
+
+	//4E: envoyer une requete au serveur
+	char* reps=calloc(1024, sizeof(char));
+	send(dss, reps, sizeof(reps));
+	---#
+
+	//5E: recevoir la reponse du serveur
+	char* reqt=calloc(1024, sizeof(char));
+	memset(&reqt, "\0", 1024);
+	if(recv(dss, reqt, sizeof(reqt), 0)>0)
+	//6E: se déconnecter au serveur
+	close(dss);
+	---#
+
+
+
+NB: j'ai juste mis les bouts de code pour vous permettre de mieux comprendre le fonctionnement des programmes. Selon vos besoins, vous ajouterez par exemple une boucle infinie volontaire du genre while(1) pour permettre au serveur d'couter indéfiniment, faire en sorte qu'il soit multiclient, etc.... je vous donne juste les briques de base et pour le reste enjoy <3
+
+
+
+
+Chapitre 2: Les sockets en mode non connecté: UDP/IP
+1. Les sockets côté serveur
+2. Les sockets côté client
+
+[Je ne pense pas que vous ayez étudié cette partie, c'est pourquoi je vais pas la traiter ;) ]
+
+
+
+==========================================================================================================
+$ echo "flag{ Allez SSI promo 2019, hackez-moi l'examen de Bouzidi avec au moins 15/20}" > promo2020.love
+==========================================================================================================

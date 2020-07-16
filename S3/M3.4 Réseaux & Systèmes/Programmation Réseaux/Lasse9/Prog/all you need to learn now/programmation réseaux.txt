@@ -1,0 +1,175 @@
+drbouzidi4@gmail.com
+d.bouzidi@um5s.net.ma
+
+
+séance 1: Notions sur les réseaux 
+séance 2: Notiions sur les réseaux
+séance 3: socket mode connecté
+séance 4: socket client
+séance 5: socket coté serveur:
+séance 6: utilisation du multicast
+séance 7: socket mode non connecté
+-les sockets comme terme sont "prise" il y a deux  types connecté et non connecté
+-mode connecté il faut que les deux machines se connaissest, non connecté c dans la diffusion couche 4
+-socket mode connecté plus fiable mais socket mode non connecté plus rapide
+-socket client est plus simple que le socket serveur.
+norme utilisé par tous le monde	protocole: ensemble de régles
+
+protocoles http(de port 80) ftp dns dhcp snmp(protocole de gestion de réseau)	dns smptp pop telnet(c un protocole qui permet d'administrer des machines à distance)
+ssl(secune socket layer) 
+
+fonctionalités de la couche liaisonde données(accés au support,adresse mac)
+fonctionalités de nel(adressage, routage)
+
+adresse mac 6 octés
+pourquoi on a adressage comme fonctionnalité dans les deux couches ld et nel(c parcequ'on trouve la machine plus facilement. on était obligé de rajouter un nouveau adressage qui nous permet de trouver l'adresse du réseau et puis l'adresse de la machine) 
+
+on a définit les classes A B C dans l'adressage pour connaitre le masque (le premier bit si il est 0 c'est la classe a s'il est 1 on voit le deuxiéme bit pour voir si il'est classe b ou c)
+
+le but du masque trouver le réseau et puis la machine 
+
+adresse du la couche nel c 4 octets
+
+routage statique figé j'écris mois le chemin 	dynamique j'utilise des protocoles (dhcp....)
+
+mayé j'ai plusieurs chemin pour aller à une distination (internet)
+
+
+ssh et les socket sont dans la couche transport
+e
+http et connecté can on y utilise tcp et il est connecté
+
+socket dans le mode connecté on utilise tsp dans le mode non connecté on utilise udp
+
+ftp transfert des fichiers
+
+
+Identifiant TCP 6  UDP 17
+
+
+
+
+
+couche1:LD(@macs,@macd)
+couche2:NEL(IPs,IPd)
+couche3(port(s),port(d))un port permet d'idientifier un processus dans une machine
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 2
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+il y'a deux types de serveurs serveurs normale et serveurs applicatifs( la difference c'est que le serveur applicatif contient le serveur normale)
+un exemple de serveur applicatif c'est tomcat, jonass, web sphere, gloop fill
+
+script coté client (javascript)
+script coté serveur (python,php,servlet)
+
+127.0.0.1 local host (loop back)
+
+je ne peux pas lancer deux processus sur le méme port
+
+le port par defaut est 80 mais tomcat nous demande si on veut utiliser le port 8080 car peut étre il y a un port dans le port 80 
+on doit spécicfier le document lorseque se connecte dans un serveur
+
+telnet port 23
+
+http protocole sans etat il ne se rappele pas
+
+telnet ip port
+
+adresse privé je peux pas y acceder à l'exterieur de mon réseaux
+
+10.0.0.0 à 10.255.255.255 privé
+172.16.0.0 à 172.31.255.255 privé 
+192.168.0.0 à 192.168.255.255 privé
+adresse privé/publique
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 3
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+IP mode non connecté
+
+x25 est réseau de transport en mode connecté et il est plus fiable que ip(les banques utilisent x25)
+
+socketdr structure pour stocker une adresse énérriqque(pas spécifique), il est définit par deux parties, la premiére nous donnes le type du réseau(type d'adresse) la deuxiéme partie c'est pour la valeur de l'adresse
+types d'adresse af_INET(internet ipv4)
+on a besoin d'un tableau pour stocker les données
+
+
+réponse http 200 la ressource existe, 204 on a pas fini le téléchargement de la fichier
+400 erreurs clients
+500+ erreurs serveurq
+
+borage dernier champs sert à compléter le nombre des octets pour respecter la forme de socketdr(000000000)
+sockadr_in sin family 2 octets , sin adresse 4 octets, sin port 2 octets, sin zzezro 8 octets
+
+htons host to network short
+
+short 2 octets, long 4 octets
+
+processeur bin indian little indian
+
+aton ascii to network
+
+
+s_addr champs qui existe dans in_addr
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 4
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+gethostbyname
+c:windows sys32 drivers etc (mettre une adresse d'un serveur dns dans le fichier texte permet la résolution de dns localement 
+
+API
+
+
+sockets (3 entrées déjà prises entrée/sortie standards, et les erreurs (clavier écran))
+
+prompt(root hashtag )
+
+sock_stream qualité avec laquelle on veut envoyer le message sur le reseau
+
+
+chaque fonction qui est susciptible à retourner une erreur on l'entoure par if
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 5
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+on parle des ports par defaults que pour des serveurs!
+
+telnet port client port serveur
+
+(filezilla?)
+
+
+le port client est affecté aléatoirement par le systéme au delà de 1024(get/ @c (port client aléatoire par exemple 3349) @S 80)
+															réponse ( 3349 @c 80 header et html code)
+
+les fonctions send et rercv ne peuvent étre utilisées que sur un socket
+read write
+
+
+(\ charctére d'échappement r:retourchariot  ,n:retour chariot new line)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 6
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+				
+smtp l'envoi des mails
+pop3 reception des emails(récupére et suprime la copi)
+imap redeption des emails (il laisse une copie au serveur)
+snmp gestion des accés réseaux  161 lorsqu'on demande la récupérationdes infos, 162 traps lorsqu'il ya un prob
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																	séance 7
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+netstat -ao
+taskkill
+
